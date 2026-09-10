@@ -1,1 +1,579 @@
-demo
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>StreetPace | Sneaker Store & Streetwear</title>
+    <meta name="title" content="StreetPace | Sneaker Store & Streetwear">
+    <meta name="description" content="Catálogo exclusivo de zapatillas urbanas, deportivas y clásicas retro. Envíos directos a todo el país.">
+
+    <!-- METATAGS Y MINIATURA PARA REDES SOCIALES -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="StreetPace">
+    <meta property="og:title" content="StreetPace | Sneaker Store">
+    <meta property="og:description" content="Descubre las mejores zapatillas urbanas, de entrenamiento y modelos retro.">
+    <meta property="og:url" content="https://ventalista.lat/demosteetpace/">
+
+    <meta property="og:image" content="https://qrdigital.github.io/StreetPace/logostreetpace.jpg">
+    <meta property="og:image:secure_url" content="https://qrdigital.github.io/StreetPace/logostreetpace.jpg">
+    <meta property="og:image:type" content="image/jpeg">
+    <meta property="og:image:width" content="600">
+    <meta property="og:image:height" content="600">
+
+    <link rel="shortcut icon" href="https://qrdigital.github.io/StreetPace/logostreetpace.jpg" type="image/jpeg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <base href="https://qrdigital.github.io/StreetPace/">
+
+    <style>
+        :root {
+            --dark: #0f172a;
+            --brand: #2563eb;
+            --brand-hover: #1d4ed8;
+            --muted: #64748b;
+            --line: #e2e8f0;
+            --bg-light: #f8fafc;
+            --wa: #25D366;
+            --radius: 16px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+        body {
+            font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+            background: var(--bg-light);
+            color: var(--dark);
+            padding-bottom: 110px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        img { display: block; max-width: 100%; }
+        button, input, select { font-family: inherit; }
+
+        .container { width: min(1180px, calc(100% - 32px)); margin: auto; }
+
+        .hero { background: #fff; border-bottom: 1px solid var(--line); }
+        .hero-banner-wrap { width: 100%; background: #000; }
+        .hero-image { width: 100%; height: auto; max-height: 360px; object-fit: cover; display: block; }
+
+        .business-info { padding: 20px 0; }
+        .business-top { display: flex; align-items: center; gap: 16px; }
+        .business-logo {
+            width: 80px; height: 80px; object-fit: cover; border-radius: 20px;
+            border: 2px solid var(--line); box-shadow: 0 8px 20px rgba(0,0,0,.06); background: #fff;
+        }
+        .business-name { font-size: clamp(26px, 4vw, 36px); font-weight: 800; color: var(--dark); letter-spacing: -0.5px; }
+        .business-description { font-size: 14px; color: var(--muted); margin-top: 2px; }
+
+        .categories-tabs { display: flex; gap: 8px; margin-top: 24px; overflow-x: auto; padding-bottom: 4px; }
+        .tab-btn {
+            background: #fff; border: 1px solid var(--line); padding: 10px 18px;
+            border-radius: 999px; font-weight: 700; font-size: 13px; color: var(--muted);
+            cursor: pointer; whitespace: nowrap; transition: all .2s ease;
+        }
+        .tab-btn.active { background: var(--dark); color: #fff; border-color: var(--dark); }
+
+        .section { padding: 24px 0; }
+        .products-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; }
+        
+        .product-card {
+            background: #fff; border-radius: var(--radius); overflow: hidden;
+            border: 1px solid var(--line); transition: transform .22s ease, box-shadow .22s ease; cursor: pointer;
+        }
+        .product-card:hover { transform: translateY(-4px); box-shadow: 0 12px 28px rgba(0,0,0,.08); border-color: #cbd5e1; }
+        .product-img { width: 100%; height: 230px; object-fit: cover; background: #fff; }
+        .product-content { padding: 16px; }
+        .product-category { font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--brand); letter-spacing: 0.5px; }
+        .product-name { font-size: 16px; font-weight: 700; color: var(--dark); margin-top: 2px; }
+        .product-bottom { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; }
+        .product-price { font-size: 17px; font-weight: 800; color: var(--dark); }
+        .add-button { background: var(--dark); color: #fff; border: 0; border-radius: 10px; padding: 9px 14px; font-weight: 700; font-size: 12px; }
+
+        .cart-floating {
+            position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%);
+            width: min(600px, calc(100% - 32px)); background: var(--dark); color: white;
+            border-radius: 18px; padding: 14px 20px; z-index: 100; display: flex;
+            justify-content: space-between; align-items: center; box-shadow: 0 16px 40px rgba(0,0,0,.3); cursor: pointer;
+        }
+        .cart-total { font-weight: 800; font-size: 17px; color: #fff; }
+
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(4px); z-index: 200; display: none; align-items: center; justify-content: center; padding: 16px;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal { background: #fff; width: min(540px, 100%); max-height: 90vh; overflow-y: auto; border-radius: 24px; padding: 24px; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .close-button { width: 36px; height: 36px; border-radius: 50%; border: 0; background: #f1f5f9; cursor: pointer; font-size: 18px; font-weight: 700; }
+
+        .modal-product { display: flex; gap: 16px; margin-bottom: 20px; }
+        .modal-product img { width: 130px; height: 130px; border-radius: 16px; object-fit: cover; border: 1px solid var(--line); }
+
+        .option-group { margin-top: 18px; }
+        .option-title { font-weight: 700; margin-bottom: 10px; font-size: 13px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+
+        .colors-flex { display: flex; gap: 10px; flex-wrap: wrap; }
+        .color-chip {
+            border: 2px solid var(--line); padding: 8px 14px; border-radius: 12px;
+            font-size: 13px; font-weight: 700; cursor: pointer; background: #fff; display: flex; align-items: center; gap: 8px;
+        }
+        .color-chip.active { border-color: var(--brand); background: #eff6ff; color: var(--brand); }
+
+        .sizes-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+        .size-btn {
+            border: 1px solid var(--line); padding: 12px 0; border-radius: 10px;
+            text-align: center; cursor: pointer; font-size: 14px; font-weight: 700; background: #fff;
+        }
+        .size-btn.active { border-color: var(--dark); background: var(--dark); color: #fff; }
+
+        .modal-add-button {
+            width: 100%; background: var(--brand); color: white; border: 0;
+            border-radius: 14px; padding: 16px; margin-top: 24px; font-weight: 800; font-size: 15px; cursor: pointer;
+            transition: background .2s ease;
+        }
+        .modal-add-button:hover { background: var(--brand-hover); }
+
+        .cart-item { border-bottom: 1px solid var(--line); padding: 12px 0; }
+        .cart-item-top { display: flex; justify-content: space-between; }
+        .cart-item-details { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+        .summary { margin-top: 16px; border-top: 1px solid var(--line); padding-top: 12px; }
+        .summary-line { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 14px; }
+        .summary-total { font-size: 18px; font-weight: 800; color: var(--dark); }
+
+        .form-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .form-group { margin-top: 12px; }
+        .form-group label { display: block; font-size: 12px; font-weight: 700; margin-bottom: 4px; }
+        .form-group input, .form-group select { width: 100%; border: 1px solid var(--line); border-radius: 10px; padding: 10px; font-size: 13px; }
+
+        .whatsapp-order { width: 100%; background: var(--wa); color: white; border: 0; border-radius: 14px; padding: 16px; margin-top: 18px; font-size: 15px; font-weight: 800; cursor: pointer; }
+
+        @media (max-width: 900px) { .products-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+        @media (max-width: 500px) { 
+            .products-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; } 
+            .product-img { height: 150px; } 
+            .form-row { grid-template-columns: 1fr; } 
+            .sizes-grid { grid-template-columns: repeat(4, 1fr); }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="hero">
+        <div class="hero-banner-wrap">
+            <img class="hero-image" src="https://qrdigital.github.io/StreetPace/bannerstreetpace.jpg" alt="Banner StreetPace">
+        </div>
+        <div class="container business-info">
+            <div class="business-top">
+                <img class="business-logo" src="https://qrdigital.github.io/StreetPace/logostreetpace.jpg" alt="Logo StreetPace">
+                <div>
+                    <h1 class="business-name">StreetPace</h1>
+                    <p class="business-description">Streetwear & Authentic Kicks</p>
+                </div>
+            </div>
+
+            <div class="categories-tabs">
+                <button class="tab-btn active" onclick="filterCategory('todos', this)">Ver Todos</button>
+                <button class="tab-btn" onclick="filterCategory('Urbana', this)">Urbana</button>
+                <button class="tab-btn" onclick="filterCategory('Retro', this)">Retro / Clásica</button>
+                <button class="tab-btn" onclick="filterCategory('Treno', this)">Deportivo / Treno</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="section">
+            <div class="products-grid" id="productsGrid"></div>
+        </section>
+    </main>
+
+    <div class="cart-floating" onclick="openCart()">
+        <div>
+            <strong style="display:block; font-size:14px;">Mi Pedido</strong>
+            <span id="cartCount" style="font-size:12px; color:#94a3b8;">0 pares</span>
+        </div>
+        <div class="cart-total" id="floatingTotal">S/ 0.00</div>
+    </div>
+
+    <div class="modal-overlay" id="productModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 id="modalProductName" style="font-size:20px; font-weight:800;">Producto</h2>
+                <button class="close-button" onclick="closeModal('productModal')">×</button>
+            </div>
+
+            <div class="modal-product">
+                <img id="modalProductImage" src="" alt="">
+                <div>
+                    <span id="modalProductCategory" class="product-category">CATEGORIA</span>
+                    <p id="modalProductDesc" style="color:var(--muted); font-size:12px; margin-top:2px;">Calzado de alta durabilidad.</p>
+                    <strong id="modalProductPrice" style="display:block; margin-top:8px; font-size:20px; color:var(--dark);"></strong>
+                </div>
+            </div>
+
+            <div class="option-group">
+                <div class="option-title">1. Selecciona Color / Variante</div>
+                <div class="colors-flex" id="colorContainer"></div>
+            </div>
+
+            <div class="option-group">
+                <div class="option-title">2. Selecciona tu Talla (EU)</div>
+                <div class="sizes-grid" id="sizeContainer"></div>
+            </div>
+
+            <button class="modal-add-button" onclick="addToCart()">Agregar al Carrito</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="cartModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 style="font-size:20px; font-weight:800;">Resumen de Compra</h2>
+                <button class="close-button" onclick="closeModal('cartModal')">×</button>
+            </div>
+
+            <div id="cartItems"></div>
+
+            <div class="summary">
+                <div class="summary-line">
+                    <span>Subtotal</span>
+                    <strong id="summarySubtotal">S/ 0.00</strong>
+                </div>
+                <div class="summary-line">
+                    <span>Envío</span>
+                    <strong id="summaryDelivery">S/ 0.00</strong>
+                </div>
+                <div class="summary-line summary-total">
+                    <span>Total</span>
+                    <strong id="summaryTotal">S/ 0.00</strong>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Método de Entrega</label>
+                <select id="deliveryOption" onchange="updateDelivery()">
+                    <option value="Delivery">🚚 Envío a Domicilio (+ S/ 15.00)</option>
+                    <option value="Recojo">📍 Recojo en Tienda (Gratis)</option>
+                </select>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Nombre Completo</label>
+                    <input type="text" id="clientName" placeholder="Ej. Ricardo Pérez">
+                </div>
+                <div class="form-group">
+                    <label>DNI / CE</label>
+                    <input type="text" id="clientDni" placeholder="Ej. 72839102">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Dirección de Envío / Agencia</label>
+                <input type="text" id="clientAddress" placeholder="Av. Principal 123, Urb. Los Pinos">
+            </div>
+
+            <button class="whatsapp-order" onclick="sendOrderWhatsApp()">Confirmar Pedido por WhatsApp</button>
+        </div>
+    </div>
+
+<script>
+const CDN_BASE = "https://qrdigital.github.io/StreetPace/";
+
+const catalog = [
+    // --- CATEGORIA URBANA ---
+    {
+        id: 1, category: "Urbana", name: "StreetPace Urban One", price: 289.00,
+        variants: [
+            { color: "Colorway 01", img: CDN_BASE + "urbana1modelo1.jpg", sizes: ["38","39","40","41","42"] },
+            { color: "Colorway 02", img: CDN_BASE + "urbana1modelo2.jpg", sizes: ["39","40","41","42"] },
+            { color: "Colorway 03", img: CDN_BASE + "urbana1modelo3.jpg", sizes: ["40","41","42","43"] }
+        ]
+    },
+    {
+        id: 2, category: "Urbana", name: "StreetPace Low Block", price: 279.00,
+        variants: [
+            { color: "Colorway 01", img: CDN_BASE + "urbana2modelo1.jpg", sizes: ["38","39","40","41"] },
+            { color: "Colorway 02", img: CDN_BASE + "urbana2modelo2.jpg", sizes: ["39","40","41","42"] },
+            { color: "Colorway 03", img: CDN_BASE + "urbana2modelo3.jpg", sizes: ["40","41","42"] }
+        ]
+    },
+    {
+        id: 3, category: "Urbana", name: "StreetPace City Vibe", price: 299.00,
+        variants: [
+            { color: "Colorway 01", img: CDN_BASE + "urbana3modelo1.jpg", sizes: ["39","40","41","42"] },
+            { color: "Colorway 02", img: CDN_BASE + "urbana3modelo2.jpg", sizes: ["38","39","40","41","42"] },
+            { color: "Colorway 03", img: CDN_BASE + "urbana3modelo3.jpg", sizes: ["40","41","42","43"] }
+        ]
+    },
+    {
+        id: 4, category: "Urbana", name: "StreetPace Street Flex", price: 269.00,
+        variants: [
+            { color: "Colorway 01", img: CDN_BASE + "urbana4modelo1.jpg", sizes: ["38","39","40","41"] },
+            { color: "Colorway 02", img: CDN_BASE + "urbana4modelo2.jpg", sizes: ["39","40","41","42"] },
+            { color: "Colorway 03", img: CDN_BASE + "urbana4modelo3.jpg", sizes: ["40","41","42"] }
+        ]
+    },
+
+    // --- CATEGORIA RETRO / CLASICAS ---
+    {
+        id: 5, category: "Retro", name: "StreetPace Retro OG", price: 329.00,
+        variants: [
+            { color: "Edition 01", img: CDN_BASE + "retro1modelo1.jpg", sizes: ["39","40","41","42"] },
+            { color: "Edition 02", img: CDN_BASE + "retro1modelo2.jpg", sizes: ["40","41","42","43"] },
+            { color: "Edition 03", img: CDN_BASE + "retro1modelo3.jpg", sizes: ["39","40","41"] }
+        ]
+    },
+    {
+        id: 6, category: "Retro", name: "StreetPace Classic Heritage", price: 319.00,
+        variants: [
+            { color: "Edition 01", img: CDN_BASE + "retro2modelo1.jpg", sizes: ["38","39","40","41","42"] },
+            { color: "Edition 02", img: CDN_BASE + "retro2modelo2.jpg", sizes: ["39","40","41","42"] }
+        ]
+    },
+    {
+        id: 7, category: "Retro", name: "StreetPace Court 80s", price: 309.00,
+        variants: [
+            { color: "Edition 01", img: CDN_BASE + "retro3modelo1.jpg", sizes: ["39","40","41","42"] },
+            { color: "Edition 02", img: CDN_BASE + "retro3modelo2.jpg", sizes: ["40","41","42","43"] }
+        ]
+    },
+    {
+        id: 8, category: "Retro", name: "StreetPace Vintage High", price: 339.00,
+        variants: [
+            { color: "Edition 01", img: CDN_BASE + "retro4modelo1.jpg", sizes: ["39","40","41","42"] },
+            { color: "Edition 02", img: CDN_BASE + "retro4modelo2.jpg", sizes: ["40","41","42"] }
+        ]
+    },
+
+    // --- CATEGORIA TRENO / DEPORTIVO ---
+    {
+        id: 9, category: "Treno", name: "StreetPace Treno Runner", price: 349.00,
+        variants: [
+            { color: "Performance 01", img: CDN_BASE + "treno1modelo1.jpg", sizes: ["39","40","41","42"] },
+            { color: "Performance 02", img: CDN_BASE + "treno1modelo2.jpg", sizes: ["40","41","42","43"] },
+            { color: "Performance 03", img: CDN_BASE + "treno1modelo3.jpg", sizes: ["38","39","40","41"] }
+        ]
+    },
+    {
+        id: 10, category: "Treno", name: "StreetPace Speed Tech", price: 359.00,
+        variants: [
+            { color: "Performance 01", img: CDN_BASE + "treno2modelo1.jpg", sizes: ["39","40","41","42"] },
+            { color: "Performance 02", img: CDN_BASE + "treno2modelo2.jpg", sizes: ["40","41","42"] }
+        ]
+    },
+    {
+        id: 11, category: "Treno", name: "StreetPace Air Motion", price: 329.00,
+        variants: [
+            { color: "Performance 01", img: CDN_BASE + "treno3modelo1.jpg", sizes: ["38","39","40","41"] },
+            { color: "Performance 02", img: CDN_BASE + "treno3modelo2.jpg", sizes: ["39","40","41","42"] }
+        ]
+    },
+    {
+        id: 12, category: "Treno", name: "StreetPace Pro Track", price: 369.00,
+        variants: [
+            { color: "Performance 01", img: CDN_BASE + "treno4modelo1.jpg", sizes: ["39","40","41","42"] },
+            { color: "Performance 02", img: CDN_BASE + "treno4modelo2.jpg", sizes: ["40","41","42","43"] },
+            { color: "Performance 03", img: CDN_BASE + "treno4modelo3.jpg", sizes: ["39","40","41"] }
+        ]
+    }
+];
+
+let cart = [];
+let currentCategory = 'todos';
+let selectedProduct = null;
+let selectedVariantIdx = 0;
+let selectedSize = null;
+
+function renderCatalog() {
+    const grid = document.getElementById('productsGrid');
+    const filtered = currentCategory === 'todos' ? catalog : catalog.filter(x => x.category === currentCategory);
+
+    grid.innerHTML = filtered.map(p => `
+        <article class="product-card" onclick="openProductModal(${p.id})">
+            <img class="product-img" src="${p.variants[0].img}" alt="${p.name}">
+            <div class="product-content">
+                <span class="product-category">${p.category}</span>
+                <h3 class="product-name">${p.name}</h3>
+                <div class="product-bottom">
+                    <div class="product-price">S/ ${p.price.toFixed(2)}</div>
+                    <button class="add-button">Elegir Talla</button>
+                </div>
+            </div>
+        </article>
+    `).join('');
+}
+
+function filterCategory(cat, btn) {
+    currentCategory = cat;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderCatalog();
+}
+
+function openProductModal(id) {
+    selectedProduct = catalog.find(x => x.id === id);
+    selectedVariantIdx = 0;
+    selectedSize = null;
+
+    document.getElementById('modalProductName').textContent = selectedProduct.name;
+    document.getElementById('modalProductCategory').textContent = selectedProduct.category;
+    document.getElementById('modalProductPrice').textContent = `S/ ${selectedProduct.price.toFixed(2)}`;
+
+    renderModalOptions();
+    document.getElementById('productModal').classList.add('active');
+}
+
+function renderModalOptions() {
+    const currentVariant = selectedProduct.variants[selectedVariantIdx];
+    document.getElementById('modalProductImage').src = currentVariant.img;
+
+    const colorWrap = document.getElementById('colorContainer');
+    colorWrap.innerHTML = selectedProduct.variants.map((v, idx) => `
+        <button class="color-chip ${selectedVariantIdx === idx ? 'active' : ''}" onclick="selectVariant(${idx})">
+            ${v.color}
+        </button>
+    `).join('');
+
+    const sizeWrap = document.getElementById('sizeContainer');
+    sizeWrap.innerHTML = currentVariant.sizes.map(s => `
+        <button class="size-btn ${selectedSize === s ? 'active' : ''}" onclick="selectSize('${s}')">
+            ${s}
+        </button>
+    `).join('');
+}
+
+function selectVariant(idx) {
+    selectedVariantIdx = idx;
+    selectedSize = null;
+    renderModalOptions();
+}
+
+function selectSize(size) {
+    selectedSize = size;
+    renderModalOptions();
+}
+
+function addToCart() {
+    if (!selectedSize) {
+        alert("Por favor selecciona una talla antes de agregar.");
+        return;
+    }
+
+    const currentVariant = selectedProduct.variants[selectedVariantIdx];
+
+    cart.push({
+        id: Date.now(),
+        name: selectedProduct.name,
+        category: selectedProduct.category,
+        color: currentVariant.color,
+        size: selectedSize,
+        price: selectedProduct.price
+    });
+
+    closeModal('productModal');
+    updateCartUI();
+}
+
+function updateCartUI() {
+    const totalItems = cart.length;
+    const subtotal = cart.reduce((s, item) => s + item.price, 0);
+
+    document.getElementById('cartCount').textContent = `${totalItems} ${totalItems === 1 ? 'par' : 'pares'}`;
+    document.getElementById('floatingTotal').textContent = `S/ ${subtotal.toFixed(2)}`;
+    renderCartItems();
+}
+
+function renderCartItems() {
+    const wrap = document.getElementById('cartItems');
+    if (!cart.length) {
+        wrap.innerHTML = '<p style="color:var(--muted); font-size:14px;">Tu carrito está vacío.</p>';
+        return;
+    }
+
+    wrap.innerHTML = cart.map(item => `
+        <div class="cart-item">
+            <div class="cart-item-top">
+                <strong>${item.name}</strong>
+                <span>S/ ${item.price.toFixed(2)}</span>
+            </div>
+            <div class="cart-item-details">
+                Color: ${item.color} | Talla: <strong>${item.size} (EU)</strong><br>
+                <button onclick="removeCartItem(${item.id})" style="color:red; border:0; background:none; cursor:pointer; font-size:11px; margin-top:4px;">Eliminar</button>
+            </div>
+        </div>
+    `).join('');
+
+    updateDelivery();
+}
+
+function removeCartItem(id) {
+    cart = cart.filter(x => x.id !== id);
+    updateCartUI();
+}
+
+function updateDelivery() {
+    const subtotal = cart.reduce((s, item) => s + item.price, 0);
+    const isDelivery = document.getElementById('deliveryOption').value === 'Delivery';
+    const deliveryCost = isDelivery ? 15 : 0;
+
+    document.getElementById('summarySubtotal').textContent = `S/ ${subtotal.toFixed(2)}`;
+    document.getElementById('summaryDelivery').textContent = `S/ ${deliveryCost.toFixed(2)}`;
+    document.getElementById('summaryTotal').textContent = `S/ ${(subtotal + deliveryCost).toFixed(2)}`;
+}
+
+function openCart() {
+    updateCartUI();
+    document.getElementById('cartModal').classList.add('active');
+}
+
+function closeModal(modalId) {
+    document.getElementById(modalId).classList.remove('active');
+}
+
+function sendOrderWhatsApp() {
+    if (!cart.length) {
+        alert('Agrega al menos un par al carrito.');
+        return;
+    }
+
+    const name = document.getElementById('clientName').value.trim();
+    const dni = document.getElementById('clientDni').value.trim();
+    const address = document.getElementById('clientAddress').value.trim();
+    const deliveryType = document.getElementById('deliveryOption').value;
+    const isDelivery = deliveryType === 'Delivery';
+    const deliveryCost = isDelivery ? 15 : 0;
+    const subtotal = cart.reduce((s, item) => s + item.price, 0);
+    const total = subtotal + deliveryCost;
+
+    const itemsText = cart.map(item => 
+        `• 1x ${item.name}\n   — Color: ${item.color}\n   — Talla: ${item.size} EU\n   — Precio: S/ ${item.price.toFixed(2)}`
+    ).join('\n\n');
+
+    const text = [
+        '👟 *NUEVO PEDIDO - STREETPACE*',
+        '',
+        itemsText,
+        '',
+        `*Subtotal:* S/ ${subtotal.toFixed(2)}`,
+        `*Envío:* ${isDelivery ? 'S/ 15.00 (Delivery)' : 'Gratis (Recojo en Tienda)'}`,
+        `*TOTAL A PAGAR:* S/ ${total.toFixed(2)}`,
+        '',
+        name ? `*Cliente:* ${name}` : '',
+        dni ? `*DNI/CE:* ${dni}` : '',
+        address ? `*Dirección/Agencia:* ${address}` : ''
+    ].filter(Boolean).join('\n');
+
+    window.open(`https://wa.me/51920832884?text=${encodeURIComponent(text)}`, '_blank', 'noopener');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    renderCatalog();
+});
+</script>
+</body>
+</html>
+
