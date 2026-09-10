@@ -8,7 +8,6 @@
     <meta name="title" content="StreetPace | Sneaker Store & Streetwear">
     <meta name="description" content="Catálogo exclusivo de zapatillas urbanas, deportivas y clásicas retro. Envíos directos a todo el país.">
 
-    <!-- METATAGS Y MINIATURA PARA REDES SOCIALES -->
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="StreetPace">
     <meta property="og:title" content="StreetPace | Sneaker Store">
@@ -110,7 +109,45 @@
         .close-button { width: 36px; height: 36px; border-radius: 50%; border: 0; background: #f1f5f9; cursor: pointer; font-size: 18px; font-weight: 700; }
 
         .modal-product { display: flex; gap: 16px; margin-bottom: 20px; }
-        .modal-product img { width: 130px; height: 130px; border-radius: 16px; object-fit: cover; border: 1px solid var(--line); }
+        
+        /* CONTENEDOR DE IMAGEN CON LUPA Y ZOOM */
+        .modal-img-container {
+            position: relative;
+            width: 130px;
+            height: 130px;
+            flex-shrink: 0;
+            border-radius: 16px;
+            overflow: hidden;
+            cursor: zoom-in;
+            border: 1px solid var(--line);
+        }
+        .modal-img-container img { width: 100%; height: 100%; object-fit: cover; }
+        .modal-img-zoom-hint {
+            position: absolute;
+            bottom: 6px;
+            right: 6px;
+            background: rgba(15, 23, 42, 0.75);
+            color: #fff;
+            font-size: 11px;
+            padding: 3px 6px;
+            border-radius: 6px;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            gap: 2px;
+        }
+
+        /* LIGHTBOX PARA VISUALIZACIÓN A PANTALLA COMPLETA */
+        .lightbox-overlay {
+            position: fixed; inset: 0; background: rgba(0, 0, 0, 0.9);
+            z-index: 300; display: none; align-items: center; justify-content: center; padding: 20px;
+        }
+        .lightbox-overlay.active { display: flex; }
+        .lightbox-img { max-width: 90vw; max-height: 85vh; object-fit: contain; border-radius: 12px; }
+        .lightbox-close {
+            position: absolute; top: 20px; right: 20px; color: #fff; background: rgba(255,255,255,0.2);
+            border: 0; width: 44px; height: 44px; border-radius: 50%; font-size: 24px; cursor: pointer;
+        }
 
         .option-group { margin-top: 18px; }
         .option-title { font-weight: 700; margin-bottom: 10px; font-size: 13px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
@@ -198,6 +235,7 @@
         <div class="cart-total" id="floatingTotal">S/ 0.00</div>
     </div>
 
+    <!-- MODAL DE SELECCIÓN Y CONFIGURACIÓN -->
     <div class="modal-overlay" id="productModal">
         <div class="modal">
             <div class="modal-header">
@@ -206,10 +244,13 @@
             </div>
 
             <div class="modal-product">
-                <img id="modalProductImage" src="" alt="">
+                <div class="modal-img-container" onclick="zoomImage()">
+                    <img id="modalProductImage" src="" alt="Vista previa color">
+                    <div class="modal-img-zoom-hint">🔍 Ampliar</div>
+                </div>
                 <div>
                     <span id="modalProductCategory" class="product-category">CATEGORIA</span>
-                    <p id="modalProductDesc" style="color:var(--muted); font-size:12px; margin-top:2px;">Calzado de alta durabilidad.</p>
+                    <p id="modalProductDesc" style="color:var(--muted); font-size:12px; margin-top:2px;">Haz clic en la imagen para ver en pantalla completa.</p>
                     <strong id="modalProductPrice" style="display:block; margin-top:8px; font-size:20px; color:var(--dark);"></strong>
                 </div>
             </div>
@@ -228,6 +269,13 @@
         </div>
     </div>
 
+    <!-- VISOR A PANTALLA COMPLETA (LIGHTBOX) -->
+    <div class="lightbox-overlay" id="lightboxModal" onclick="closeLightbox()">
+        <button class="lightbox-close" onclick="closeLightbox()">×</button>
+        <img class="lightbox-img" id="lightboxImg" src="" alt="Imagen ampliada">
+    </div>
+
+    <!-- MODAL DE CARRITO Y FINALIZACIÓN -->
     <div class="modal-overlay" id="cartModal">
         <div class="modal">
             <div class="modal-header">
@@ -457,6 +505,17 @@ function selectSize(size) {
     renderModalOptions();
 }
 
+/* FUNCIONALIDAD PARA AMPLIAR FOTO A PANTALLA COMPLETA */
+function zoomImage() {
+    const currentVariant = selectedProduct.variants[selectedVariantIdx];
+    document.getElementById('lightboxImg').src = currentVariant.img;
+    document.getElementById('lightboxModal').classList.add('active');
+}
+
+function closeLightbox() {
+    document.getElementById('lightboxModal').classList.remove('active');
+}
+
 function addToCart() {
     if (!selectedSize) {
         alert("Por favor selecciona una talla antes de agregar.");
@@ -576,4 +635,3 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
-
